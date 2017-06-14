@@ -1,0 +1,25 @@
+// reference
+// http://stackoverflow.com/questions/27024554/capture-screenshot-from-selected-minimized-window
+function WindowSnap(hWindow: HWND; bmp: TBitmap): boolean;
+var
+user32DLLHandle: THandle;
+printWindowAPI: function(sourceHandle: HWND; destinationHandle: HDC; nFlags: UINT): BOOL; stdcall;
+R: TRect;
+wp: WINDOWPLACEMENT;
+ai: ANIMATIONINFO;
+restoreAnimation: Boolean;
+ExStyle: LONG_PTR;
+begin
+Result := False;
+ExStyle := 0;
+user32DLLHandle := GetModuleHandle(user32) ;
+if user32DLLHandle <> 0 then
+begin
+@printWindowAPI := GetProcAddress(user32DLLHandle, 'PrintWindow') ;
+if @printWindowAPI <> nil then
+begin
+if not IsWindow(hWindow) then Exit;
+
+ZeroMemory(@wp, SizeOf(wp));
+wp.length := SizeOf(wp);
+GetWindowPlacement(hWindow, @wp);

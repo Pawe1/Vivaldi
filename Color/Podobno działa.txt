@@ -1,0 +1,21 @@
+public System.Drawing.Bitmap CaptureWindow(IntPtr hWnd)
+        {
+            System.Drawing.Rectangle rctForm = System.Drawing.Rectangle.Empty;
+            using (System.Drawing.Graphics grfx = System.Drawing.Graphics.FromHdc(GetWindowDC(hWnd)))
+            {
+                rctForm = System.Drawing.Rectangle.Round(grfx.VisibleClipBounds);
+            }
+            System.Drawing.Bitmap pImage = new System.Drawing.Bitmap(rctForm.Width, rctForm.Height);
+            System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(pImage);
+            IntPtr hDC = graphics.GetHdc();
+            //paint control onto graphics using provided options
+            try
+            {
+                PrintWindow(hWnd, hDC, (uint)0);
+            }
+            finally
+            {
+                graphics.ReleaseHdc(hDC);
+            }
+            return pImage;
+        }
